@@ -3,6 +3,7 @@ import { UserService } from "./user.service";
 import { CreateUserDto } from "./dtos/create-user.dto";
 import { ChangePasswordDto } from "./dtos/change-password.dto";
 import { UserEntity } from "./entities/user.entity";
+import { ApiOkResponse, ApiParam } from "@nestjs/swagger";
 
 @Controller('users')
 export class UserController {
@@ -15,6 +16,10 @@ export class UserController {
     }
 
     @Get(':id')
+    @ApiParam({
+        name:"id",
+        type:"number"
+    })
     @UseInterceptors(ClassSerializerInterceptor)
     async findById(@Param('id') id): Promise<UserEntity> {
         return await this.userService.findById(parseInt(id));
@@ -26,11 +31,19 @@ export class UserController {
     }
 
     @Delete(':id')
+    @ApiParam({
+        name:"id",
+        type:"number"
+    })
     async deleteById(@Param('id') id): Promise<{id:number,message:string}> {
         return await this.userService.deleteById(parseInt(id));
     }
 
     @Patch(':id')
+    @ApiParam({
+        name:"id",
+        type:"number"
+    })
     async changePassword(@Param('id') id,@Body() changePasswordDto : ChangePasswordDto) {
         const user = this.userService.findById(parseInt(id));
         if(!user)  throw new NotFoundException();
